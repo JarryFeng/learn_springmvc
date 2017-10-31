@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+          http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+            http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+
+
+    <bean name="/good.action" class="com.my.project.controller.MyController"/>
+
+    <bean id="myController2" class="com.my.project.controller.MyController2"/>
+
+    <!-- 处理器映射器 -->
+    <!-- 方法一 非注解 -->
+    <bean class="org.springframework.web.servlet.handler.BeanNameUrlHandlerMapping"/>
+    <!-- 方法二 非注解 -->
+    <bean class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+        <property name="urlMap">
+            <map>
+                <entry key="/test.action" value-ref="myController2"/>
+            </map>
+        </property>
+    </bean>
+    <!-- 方法三 注解 -->
+    <!--<bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping" />-->
+
+    <!-- 处理器适配器 -->
+    <!-- 方法一 非注解,实现Controller接口 -->
+    <bean class="org.springframework.web.servlet.mvc.SimpleControllerHandlerAdapter"/>
+    <!-- 方法二 非注解,实现HttpRequestHandler接口 -->
+    <bean class="org.springframework.web.servlet.mvc.HttpRequestHandlerAdapter"/>
+    <!-- 方法三 注解 -->
+    <!--<bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter"/>-->
+
+    <!-- 注解驱动代替注解方式 -->
+    <mvc:annotation-driven/>
+
+    <!-- 视图解析器
+        解析jsp视图，默认使用jstl标签，需要引入jstl包
+    -->
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <!-- 默认可以不写 -->
+        <property name="viewClass" value="org.springframework.web.servlet.view.JstlView"/>
+        <property name="prefix" value="/WEB-INF/jsp/"/>
+        <property name="suffix" value=".jsp"/>
+    </bean>
+
+    <!-- 类扫描器，扫描注解的类 -->
+    <context:component-scan base-package="com.my.project"/>
+</beans>
